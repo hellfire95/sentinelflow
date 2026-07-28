@@ -1,0 +1,12 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+*.db
+runs/
+
+# personal / heavy files that must not enter the repo
+*.pdf
+*.pcap
+/Q2_1.eml
+/Q2_2.eml

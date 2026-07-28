@@ -1,0 +1,16 @@
+{
+  "case_id": "Q2_1",
+  "source_file": "Q2_1.eml",
+  "classification": "TODO: one of phishing | malware_delivery | spam | benign | suspicious_inconclusive",
+  "key_indicators": [
+    "TODO: list the indicators from your own coursework analysis, e.g.",
+    "From header claims newsletter.otto.de but envelope (smtp.mailfrom, Return-Path, Reply-To) is firiri.shop",
+    "DMARC fail for header.from=newsletter.otto.de",
+    "SPF pass but for the unrelated domain firiri.shop",
+    "TODO: add/correct based on your assignment answer"
+  ],
+  "attack_techniques": [
+    "TODO: e.g. T1566.002 Phishing: Spearphishing Link"
+  ],
+  "notes": "Fill this from your own prior analysis (assignment answer). This file must NEVER be given to the agents."
+}

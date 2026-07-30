@@ -12,7 +12,7 @@ load_dotenv()
 DEFAULT_MODELS = {
     "openai": "gpt-4o-2024-08-06",
     "anthropic": "claude-sonnet-4-20250514",
-    "gemini": "gemini-3.6-flash",
+    "gemini": "gemini-3.5-flash-lite",
     "groq": "llama-3.3-70b-versatile",
 }
 

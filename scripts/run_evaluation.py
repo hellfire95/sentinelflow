@@ -138,10 +138,31 @@ def main() -> int:
                 tag = f"[{done}/{total}] {case['case_id']} {mode} r{run_idx}"
                 print(tag, flush=True)
                 try:
-                    scored = run_one(case, mode, run_idx, write_report=args.write_report)
+                    scored = None
+                    last_err = None
+                    for attempt in range(1, 4):
+                        try:
+                            scored = run_one(
+                                case, mode, run_idx, write_report=args.write_report
+                            )
+                            break
+                        except Exception as e:
+                            last_err = e
+                            # Quota / transient — wait and retry this run
+                            wait = 30.0 * attempt
+                            msg = str(e)
+                            if "Retry in" in msg or "retry in" in msg:
+                                import re as _re
+
+                                m = _re.search(r"[Rr]etry in ([0-9]+(?:\.[0-9]+)?)s", msg)
+                                if m:
+                                    wait = float(m.group(1)) + 2.0
+                            print(f"  retry {attempt}/3 after error; sleep {wait:.0f}s", flush=True)
+                            time.sleep(wait)
+                    if scored is None:
+                        raise last_err  # type: ignore[misc]
                     all_scores.append(scored)
                     if model is None:
-                        # peek settings from last result path
                         model = "see run artifacts"
                     print(
                         f"  -> pred={scored['pred_classification']} "

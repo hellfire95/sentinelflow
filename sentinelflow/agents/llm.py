@@ -20,6 +20,15 @@ T = TypeVar("T", bound=BaseModel)
 _JSON_BLOCK = re.compile(r"```(?:json)?\s*(.*?)```", re.DOTALL)
 
 
+def _retry_seconds(exc: Exception, fallback: float) -> float:
+    """Prefer API-suggested retry delay when present (Gemini free-tier 429s)."""
+    text = str(exc)
+    match = re.search(r"[Rr]etry in ([0-9]+(?:\.[0-9]+)?)s", text)
+    if match:
+        return float(match.group(1)) + 1.0
+    return fallback
+
+
 class LLMClient:
     def __init__(self):
         provider = config.detect_provider()
@@ -63,16 +72,17 @@ class LLMClient:
         """Single completion with backoff on transient errors (429/5xx) —
         essential on free-tier providers with tight rate limits."""
         delay = 5.0
-        for attempt in range(5):
+        for attempt in range(8):
             try:
                 return self._complete_once(system, user)
             except Exception as e:
                 status = getattr(e, "status_code", None)
                 transient = status in (429, 500, 502, 503, 504)
-                if not transient or attempt == 4:
+                if not transient or attempt == 7:
                     raise
-                time.sleep(delay)
-                delay *= 2
+                wait = _retry_seconds(e, delay)
+                time.sleep(wait)
+                delay = min(delay * 2, 120.0)
         raise RuntimeError("unreachable")
 
     def _complete_once(self, system: str, user: str) -> str:

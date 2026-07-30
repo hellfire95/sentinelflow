@@ -32,6 +32,10 @@ Critic ── judges whether cited evidence actually supports each claim
  still rejected ──► UNRESOLVED: human review required (first-class outcome)
 ```
 
+Orchestration is a LangGraph state machine (`sentinelflow/graph.py`): same
+steps as above, with explicit nodes, a capped revision loop, and
+`graph_transition` events in the run trace. Parsers and agents are unchanged.
+
 Supported inputs: `.eml` (email), `.pcap`/`.pcapng` (via tshark), Suricata
 `eve.json`. Adding a new input type only requires a new parser — the agents
 are evidence-type-agnostic.

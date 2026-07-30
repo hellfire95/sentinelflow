@@ -1,0 +1,16 @@
+{
+  "case_id": "Q2_2",
+  "source_file": "Q2_2.eml",
+  "classification": "malware_delivery",
+  "key_indicators": [
+    "Subject and display name lure about tax credit / client notice (Crédito IR Liberado)",
+    "From address is a free Gmail account (sel553r@gmail.com), not an official tax authority domain",
+    "PDF attachment U1vn48GmdQr.pdf with opaque filename (likely malicious document)",
+    "SPF/DKIM/DMARC all pass for gmail.com — authentication success does not mean the content is safe",
+    "Message submitted to Gmail SMTP from an intermediate host (c3.domain) before Google relay"
+  ],
+  "attack_techniques": [
+    "T1566.001 Phishing: Spearphishing Attachment"
+  ],
+  "notes": "Malware-delivery phishing via PDF attachment. Auth passes because the attacker used a real Gmail account; the risk is the attachment and social-engineering lure."
+}

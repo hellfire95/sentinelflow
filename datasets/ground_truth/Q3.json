@@ -1,15 +1,16 @@
 {
   "case_id": "Q3",
   "source_file": "Q3.pcap",
-  "classification": "TODO: likely denial_of_service — fill from your assignment analysis",
+  "classification": "denial_of_service",
   "key_indicators": [
-    "TODO: e.g. 180 GET / to study.mazebolt.com from 10.0.0.2 at ~20 req/s",
-    "TODO: 40 POST / to test-mazebolt.com with rotating/spoofed User-Agents",
-    "TODO: heavy ICMP dest-unreachable / time-exceeded between 10.0.0.2 and 10.128.0.2",
-    "TODO: note that the capture also contains ordinary browsing (YouTube/Google) — contradictory evidence"
+    "180 HTTP GET / to study.mazebolt.com from 10.0.0.2 at ~19.8 req/s over ~9s",
+    "40 HTTP POST / to test-mazebolt.com from 10.0.0.2 at ~10.7 req/s with rotating/legacy User-Agents",
+    "High volume ICMP dest-unreachable and time-exceeded between 10.0.0.2 and 10.128.0.2",
+    "Capture also contains ordinary browsing (YouTube/Google/OCSP) — treat as background, not the primary incident"
   ],
   "attack_techniques": [
-    "TODO: e.g. T1498 Network Denial of Service / T1499 Endpoint Denial of Service"
+    "T1499 Endpoint Denial of Service",
+    "T1498 Network Denial of Service"
   ],
-  "notes": "Fill from your own prior analysis. Never give this file to the agents. The pcap itself is gitignored (too large); keep a local copy for reproduction."
+  "notes": "Application-layer HTTP flood mixed with benign background traffic. Pcap is gitignored; keep a local copy for eval runs."
 }

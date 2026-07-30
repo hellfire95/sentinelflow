@@ -1,0 +1,13 @@
+{
+  "case_id": "sample_eve",
+  "source_file": "sample_eve.json",
+  "classification": "denial_of_service",
+  "key_indicators": [
+    "Suricata alert 'ET POLICY Possible HTTP Flood Against Web Server' fired repeatedly from 10.0.0.2 to 10.128.0.2",
+    "Additional web-attack related alert present in the sample log"
+  ],
+  "attack_techniques": [
+    "T1499 Endpoint Denial of Service"
+  ],
+  "notes": "Synthetic mini eve.json for parser and pipeline coverage, not a full real-world capture."
+}

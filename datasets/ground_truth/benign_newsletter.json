@@ -1,0 +1,13 @@
+{
+  "case_id": "benign_newsletter",
+  "source_file": "benign_newsletter.eml",
+  "classification": "benign",
+  "key_indicators": [
+    "From, Reply-To, Sender, and envelope domains align under news.acmeexample.com / acmeexample.com",
+    "SPF, DKIM, and DMARC all pass with aligned domains",
+    "Body links and tracking pixel stay on acmeexample.com subdomains (expected for newsletters)",
+    "No credential lure, no urgent threat language, no unexpected attachment"
+  ],
+  "attack_techniques": [],
+  "notes": "Looks slightly 'marketing-ish' because of tracking links, but authentication and domain alignment support benign. Important false-positive trap for over-eager classifiers."
+}

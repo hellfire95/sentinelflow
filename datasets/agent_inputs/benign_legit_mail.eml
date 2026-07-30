@@ -1,0 +1,25 @@
+From: Alex Chen <alex.chen@contoso-mail.test>
+To: jamie.lee@contoso-mail.test
+Subject: Notes from today's standup
+Date: Thu, 30 Jul 2026 18:46:02 +1000
+Message-ID: <178540116254.74549.4449396838927085498@contoso-mail.test>
+Reply-To: alex.chen@contoso-mail.test
+Return-Path: alex.chen@contoso-mail.test
+Authentication-Results: spf=pass smtp.mailfrom=contoso-mail.test; dkim=pass
+ header.d=contoso-mail.test; dmarc=pass header.from=contoso-mail.test
+Received-SPF: Pass (domain of contoso-mail.test designates 198.51.100.20 as
+ permitted sender)
+Received: from smtp.contoso-mail.test (198.51.100.20) by mx.contoso-mail.test;
+ Thu, 30 Jul 2026 18:46:02 +1000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Hi Jamie,
+
+Quick notes from standup: API latency looks normal, deploy window is Thursday=
+ 2pm.
+I will send the checklist after lunch.
+
+Thanks,
+Alex

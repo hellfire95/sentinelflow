@@ -1,0 +1,12 @@
+{
+  "case_id": "benign_legit_mail",
+  "source_file": "benign_legit_mail.eml",
+  "classification": "benign",
+  "key_indicators": [
+    "From, Reply-To, and Return-Path all use contoso-mail.test with matching local users",
+    "SPF, DKIM, and DMARC pass",
+    "Ordinary workplace content (standup notes); no links, no attachments, no lure"
+  ],
+  "attack_techniques": [],
+  "notes": "Clear benign baseline. System should be able to say nothing malicious happened."
+}

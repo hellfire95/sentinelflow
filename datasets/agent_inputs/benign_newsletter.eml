@@ -1,0 +1,36 @@
+From: Acme Updates <updates@news.acmeexample.com>
+To: subscriber@example.com
+Subject: Your weekly product digest
+Date: Thu, 30 Jul 2026 18:46:02 +1000
+Message-ID: <178540116254.74549.10145601013537219801@news.acmeexample.com>
+Reply-To: updates@news.acmeexample.com
+Return-Path: bounces@news.acmeexample.com
+Sender: updates@news.acmeexample.com
+Authentication-Results: spf=pass smtp.mailfrom=news.acmeexample.com; dkim=pass
+ header.d=news.acmeexample.com; dmarc=pass header.from=news.acmeexample.com
+Received-SPF: Pass (domain of news.acmeexample.com designates 203.0.113.10 as
+ permitted sender)
+Received: from mail.news.acmeexample.com (203.0.113.10) by mx.example.com;
+ Thu, 30 Jul 2026 18:46:02 +1000
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============3616742107358894495=="
+
+--===============3616742107358894495==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Plain text digest for Acme subscribers.
+
+--===============3616742107358894495==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><p>Hello =E2=80=94 here is your weekly Acme digest.</p><p><a href=
+=3D"https://news.acmeexample.com/r/abc123">Read the full update</a></p><p><a =
+href=3D"https://track.acmeexample.com/click?u=3Dweekly">Manage preferences</a=
+></p><img src=3D"https://track.acmeexample.com/o.gif" width=3D"1" height=3D"1=
+" alt=3D"" /></body></html>
+
+--===============3616742107358894495==--

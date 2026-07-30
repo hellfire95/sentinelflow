@@ -33,11 +33,24 @@
       "ground_truth": "ground_truth/sample_eve.json",
       "ready": true,
       "note": "synthetic Suricata sample for parser coverage"
+    },
+    {
+      "case_id": "benign_newsletter",
+      "evidence_type": "email",
+      "input": "agent_inputs/benign_newsletter.eml",
+      "ground_truth": "ground_truth/benign_newsletter.json",
+      "ready": true,
+      "note": "suspicious-looking but benign (tracking links, aligned auth)"
+    },
+    {
+      "case_id": "benign_legit_mail",
+      "evidence_type": "email",
+      "input": "agent_inputs/benign_legit_mail.eml",
+      "ground_truth": "ground_truth/benign_legit_mail.json",
+      "ready": true
     }
   ],
   "planned": [
-    "benign_newsletter",
-    "benign_legit_mail",
     "mta_public_1",
     "mta_public_2",
     "mta_public_3"

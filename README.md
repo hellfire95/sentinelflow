@@ -60,8 +60,13 @@ cp .env.example .env   # then add GEMINI_API_KEY (or another provider key)
 # Full pipeline — requires an LLM API key
 .venv/bin/python -m sentinelflow.cli run datasets/agent_inputs/Q2_1.eml
 .venv/bin/python -m sentinelflow.cli run datasets/agent_inputs/Q3.pcap
-```
 
+# Investigator-only baseline (no Critic)
+.venv/bin/python -m sentinelflow.cli run datasets/agent_inputs/Q2_1.eml --investigator-only --no-report
+
+# Stage 5 evaluation: 3 runs × investigator_only vs full, all ready cases
+.venv/bin/python scripts/run_evaluation.py
+```
 Run artifacts land in `runs/<case_id>/<timestamp>/`: `trace.jsonl` (every
 agent call and verdict), `result.json` (structured outcome), `report.md`
 (readable report, IOCs defanged).

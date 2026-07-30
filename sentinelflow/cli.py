@@ -11,8 +11,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from .parsers.eml import parse_eml
-from .pipeline import run_case
+from .pipeline import parse_file, run_case
 from .store import EvidenceStore
 
 
@@ -22,7 +21,7 @@ def _default_case_id(path: str) -> str:
 
 def cmd_parse(args: argparse.Namespace) -> None:
     case_id = args.case_id or _default_case_id(args.file)
-    evidence = parse_eml(args.file, case_id)
+    evidence = parse_file(args.file, case_id)
     for e in evidence:
         print(f"[{e.id}] ({e.category.value}) {e.label}")
         print(f"    value:  {e.value}")

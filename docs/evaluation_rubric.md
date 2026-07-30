@@ -16,8 +16,8 @@ across-run variance.
 ## Metric 1 — Classification accuracy
 
 The hypothesis `classification` matches the ground-truth classification for
-the case (exact match on the enum: phishing, malware_delivery, spam, benign,
-suspicious_inconclusive).
+the case (exact match on the enum: phishing, malware_delivery,
+denial_of_service, spam, benign, suspicious_inconclusive).
 
 - Ground truth lives in `datasets/ground_truth/<case_id>.json`, never enters
   agent context.

@@ -45,6 +45,7 @@ class Case(BaseModel):
 class Classification(str, Enum):
     PHISHING = "phishing"
     MALWARE_DELIVERY = "malware_delivery"
+    DENIAL_OF_SERVICE = "denial_of_service"
     SPAM = "spam"
     BENIGN = "benign"
     SUSPICIOUS_INCONCLUSIVE = "suspicious_inconclusive"

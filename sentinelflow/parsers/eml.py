@@ -16,30 +16,13 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 from ..models import Evidence, EvidenceCategory
+from .common import EvidenceBuilder
 
 _AUTH_RESULT = re.compile(r"\b(spf|dkim|dmarc)\s*=\s*(\w+)", re.IGNORECASE)
 _AUTH_PROP = re.compile(r"\b(smtp\.mailfrom|header\.d|header\.from)\s*=\s*([^\s;]+)")
 _TEXT_URL = re.compile(r"https?://[^\s<>\"')\]]+", re.IGNORECASE)
 
 MAX_URL_EVIDENCE = 30  # cap so a link-heavy email can't flood the store
-
-
-class _EvidenceBuilder:
-    def __init__(self, case_id: str):
-        self.case_id = case_id
-        self.items: list[Evidence] = []
-
-    def add(self, category: EvidenceCategory, label: str, value: str, source: str) -> None:
-        self.items.append(
-            Evidence(
-                id=f"{self.case_id}-EV{len(self.items) + 1:03d}",
-                case_id=self.case_id,
-                category=category,
-                label=label,
-                value=value.strip(),
-                source_location=source,
-            )
-        )
 
 
 def _domain_of_address(addr: str) -> str:
@@ -57,7 +40,7 @@ def parse_eml(path: str, case_id: str) -> list[Evidence]:
     with open(path, "rb") as f:
         msg: EmailMessage = BytesParser(policy=policy.default).parse(f)
 
-    b = _EvidenceBuilder(case_id)
+    b = EvidenceBuilder(case_id)
     _extract_core_headers(msg, b)
     _extract_authentication(msg, b)
     _extract_routing(msg, b)
@@ -67,14 +50,14 @@ def parse_eml(path: str, case_id: str) -> list[Evidence]:
     return b.items
 
 
-def _extract_core_headers(msg: EmailMessage, b: _EvidenceBuilder) -> None:
+def _extract_core_headers(msg: EmailMessage, b: EvidenceBuilder) -> None:
     for header in ("From", "Reply-To", "Return-Path", "Sender", "To", "Subject", "Date", "Message-Id"):
         value = msg.get(header)
         if value:
             b.add(EvidenceCategory.HEADER, f"{header} header", str(value), f"header:{header}")
 
 
-def _extract_authentication(msg: EmailMessage, b: _EvidenceBuilder) -> None:
+def _extract_authentication(msg: EmailMessage, b: EvidenceBuilder) -> None:
     auth = msg.get("Authentication-Results")
     if auth:
         auth = str(auth)
@@ -102,7 +85,7 @@ def _extract_authentication(msg: EmailMessage, b: _EvidenceBuilder) -> None:
         )
 
 
-def _extract_routing(msg: EmailMessage, b: _EvidenceBuilder) -> None:
+def _extract_routing(msg: EmailMessage, b: EvidenceBuilder) -> None:
     received = msg.get_all("Received") or []
     b.add(EvidenceCategory.ROUTING, "Received hop count", str(len(received)), "headers:Received")
     if received:
@@ -118,7 +101,7 @@ def _extract_routing(msg: EmailMessage, b: _EvidenceBuilder) -> None:
         b.add(EvidenceCategory.ROUTING, "X-Sender-IP", str(sender_ip), "header:X-Sender-IP")
 
 
-def _extract_derived_header_facts(msg: EmailMessage, b: _EvidenceBuilder) -> None:
+def _extract_derived_header_facts(msg: EmailMessage, b: EvidenceBuilder) -> None:
     """Pure string comparisons between sender-identity domains."""
     from_domain = _domain_of_address(parseaddr(str(msg.get("From", "")))[1])
     if not from_domain:
@@ -137,7 +120,7 @@ def _extract_derived_header_facts(msg: EmailMessage, b: _EvidenceBuilder) -> Non
             )
 
 
-def _extract_body_urls(msg: EmailMessage, b: _EvidenceBuilder) -> None:
+def _extract_body_urls(msg: EmailMessage, b: EvidenceBuilder) -> None:
     urls: list[tuple[str, str, str]] = []  # (url, anchor_text, source)
 
     for part in msg.walk():
@@ -199,7 +182,7 @@ def _extract_body_urls(msg: EmailMessage, b: _EvidenceBuilder) -> None:
         )
 
 
-def _extract_attachments(msg: EmailMessage, b: _EvidenceBuilder) -> None:
+def _extract_attachments(msg: EmailMessage, b: EvidenceBuilder) -> None:
     for part in msg.walk():
         if part.get_content_disposition() != "attachment":
             continue

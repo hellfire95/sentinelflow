@@ -16,14 +16,34 @@ from .agents import report as report_agent
 from .agents.llm import LLMClient
 from .models import Case, CaseStatus, Critique, CritiqueVerdict, Hypothesis
 from .parsers.eml import parse_eml
+from .parsers.eve import parse_eve
+from .parsers.pcap import parse_pcap
 from .precheck import precheck_citations
 from .store import EvidenceStore
 from .trace import Tracer
 
+# The agents are evidence-type-agnostic; adding an input type only means
+# registering a new deterministic parser here.
+PARSERS = {
+    ".eml": parse_eml,
+    ".pcap": parse_pcap,
+    ".pcapng": parse_pcap,
+    ".json": parse_eve,
+}
+
+
+def parse_file(path: str, case_id: str):
+    suffix = Path(path).suffix.lower()
+    if suffix not in PARSERS:
+        raise RuntimeError(
+            f"Unsupported file type '{suffix}'. Supported: {', '.join(PARSERS)}"
+        )
+    return PARSERS[suffix](path, case_id)
+
 
 def ingest(path: str, case_id: str, store: EvidenceStore) -> Case:
     case = Case(case_id=case_id, source_files=[path])
-    evidence = parse_eml(path, case_id)
+    evidence = parse_file(path, case_id)
     store.save_case(case)
     store.save_evidence(evidence)
     return case

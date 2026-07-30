@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "description": "SentinelFlow Stage 4 evaluation case index. Ground truth never enters agent context.",
+  "target_case_count": {"min": 10, "max": 15},
+  "min_benign": 2,
+  "cases": [
+    {
+      "case_id": "Q2_1",
+      "evidence_type": "email",
+      "input": "agent_inputs/Q2_1.eml",
+      "ground_truth": "ground_truth/Q2_1.json",
+      "ready": false
+    },
+    {
+      "case_id": "Q2_2",
+      "evidence_type": "email",
+      "input": "agent_inputs/Q2_2.eml",
+      "ground_truth": "ground_truth/Q2_2.json",
+      "ready": false
+    },
+    {
+      "case_id": "Q3",
+      "evidence_type": "network",
+      "input": "agent_inputs/Q3.pcap",
+      "ground_truth": "ground_truth/Q3.json",
+      "ready": false,
+      "note": "pcap is gitignored; keep local copy"
+    },
+    {
+      "case_id": "sample_eve",
+      "evidence_type": "ids",
+      "input": "agent_inputs/sample_eve.json",
+      "ground_truth": "ground_truth/sample_eve.json",
+      "ready": false,
+      "note": "synthetic Suricata sample for parser coverage"
+    }
+  ],
+  "planned": [
+    "benign_newsletter",
+    "benign_legit_mail",
+    "mta_public_1",
+    "mta_public_2",
+    "mta_public_3"
+  ]
+}

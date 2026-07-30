@@ -1,0 +1,39 @@
+# SentinelFlow Stage 5 Evaluation Results
+
+Generated: 2026-07-30T15:48:23.840388+00:00
+Model: `gemini-3.5-flash-lite`
+Runs per case/config: **3**
+Cases: **12**
+
+## Headline metrics
+
+| Config | Majority classification accuracy | Mean run accuracy | Mean citation existence | Mean mechanical unsupported-claim rate | Unresolved rate |
+|---|---:|---:|---:|---:|---:|
+| investigator_only | 58.3% | 55.6% | 100.0% | 0.0% | 0.0% |
+| full | 58.3% | 58.3% | 100.0% | 0.0% | 0.0% |
+
+## Per-case majority outcomes
+
+| Case | Ground truth | Investigator-only majority | Full majority | IO correct | Full correct |
+|---|---|---|---|---|---|
+| Q2_1 | phishing | spam | spam | False | False |
+| Q2_2 | malware_delivery | phishing | phishing | False | False |
+| Q3 | denial_of_service | benign | benign | False | False |
+| sample_eve | denial_of_service | denial_of_service | denial_of_service | True | True |
+| benign_newsletter | benign | benign | benign | True | True |
+| benign_legit_mail | benign | benign | benign | True | True |
+| spam_promo | spam | spam | spam | True | True |
+| phishing_bank_lure | phishing | phishing | phishing | True | True |
+| suspicious_vendor_mismatch | suspicious_inconclusive | phishing | phishing | False | False |
+| mta_public_1 | malware_delivery | benign | benign | False | False |
+| mta_public_2 | malware_delivery | malware_delivery | malware_delivery | True | True |
+| mta_public_3 | malware_delivery | malware_delivery | malware_delivery | True | True |
+
+## Notes
+
+- Metric 2 (full unsupported-claim rate) and Metric 3b (citation relevance) still need
+  **human** blinded grading per `docs/evaluation_rubric.md`.
+- Mechanical unsupported rate counts only claims that cited fabricated evidence IDs.
+- Report agent was skipped during this eval (`write_report=False`) to reduce API use.
+
+Raw machine-readable summary: `evaluation_results.json`

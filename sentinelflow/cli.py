@@ -37,7 +37,13 @@ def cmd_parse(args: argparse.Namespace) -> None:
 
 def cmd_run(args: argparse.Namespace) -> None:
     case_id = args.case_id or _default_case_id(args.file)
-    run_dir = run_case(args.file, case_id)
+    mode = "investigator_only" if args.investigator_only else "full"
+    run_dir = run_case(
+        args.file,
+        case_id,
+        mode=mode,
+        write_report=not args.no_report,
+    )
     print(f"Run complete. Artifacts in: {run_dir}")
     print(f"  - {run_dir / 'trace.jsonl'}")
     print(f"  - {run_dir / 'result.json'}")
@@ -57,6 +63,16 @@ def main() -> None:
     p_run = sub.add_parser("run", help="full pipeline (requires LLM API key)")
     p_run.add_argument("file")
     p_run.add_argument("--case-id")
+    p_run.add_argument(
+        "--investigator-only",
+        action="store_true",
+        help="baseline: skip Critic revision loop",
+    )
+    p_run.add_argument(
+        "--no-report",
+        action="store_true",
+        help="skip Report LLM (useful for evaluation)",
+    )
     p_run.set_defaults(func=cmd_run)
 
     args = parser.parse_args()

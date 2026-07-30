@@ -49,8 +49,8 @@ def _collect_cited_ids(hypothesis: Hypothesis) -> list[str]:
     return sorted(set(ids))
 
 
-def run_case(path: str, case_id: str) -> Path:
+def run_case(path: str, case_id: str, **kwargs) -> Path:
     """Run a case through the LangGraph orchestrator."""
     from .graph import run_case as run_via_graph
 
-    return run_via_graph(path, case_id)
+    return run_via_graph(path, case_id, **kwargs)

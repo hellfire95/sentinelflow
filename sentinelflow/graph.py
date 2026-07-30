@@ -51,11 +51,21 @@ class GraphState(TypedDict, total=False):
 class _Runtime:
     """Holds objects that are not part of graph state (client, tracer, store)."""
 
-    def __init__(self, case_id: str, source_path: str):
-        self.case_id = case_id
+    def __init__(
+        self,
+        case_id: str,
+        source_path: str,
+        *,
+        write_report: bool = True,
+        mode: str = "full",
+        trace_id: str | None = None,
+    ):
+        self.case_id = case_id  # logical id used in Evidence IDs
         self.source_path = source_path
+        self.write_report = write_report
+        self.mode = mode
         self.store = EvidenceStore()
-        self.tracer = Tracer(config.RUNS_DIR, case_id)
+        self.tracer = Tracer(config.RUNS_DIR, trace_id or case_id)
         self.client = LLMClient()
 
 
@@ -137,13 +147,21 @@ def _revise(state: GraphState, rt: _Runtime) -> dict:
 
 
 def _generate_report(state: GraphState, rt: _Runtime) -> dict:
-    _transition(rt, "generate_report")
+    _transition(rt, "generate_report", write_report=rt.write_report)
     hypothesis = state["hypothesis"]
     assert hypothesis is not None
-    cited = rt.store.get_evidence_by_ids(rt.case_id, _collect_cited_ids(hypothesis))
-    narrative = report_agent.write_report(rt.client, hypothesis, cited, rt.tracer)
+    if rt.write_report:
+        cited = rt.store.get_evidence_by_ids(rt.case_id, _collect_cited_ids(hypothesis))
+        narrative = report_agent.write_report(rt.client, hypothesis, cited, rt.tracer)
+    else:
+        narrative = (
+            "# Report skipped (eval mode)\n\n"
+            f"Classification: {hypothesis.classification.value} "
+            f"({hypothesis.confidence.value})\n\n{hypothesis.summary}\n"
+        )
+        rt.tracer.event("report_skipped", reason="write_report=False")
     rt.store.update_status(rt.case_id, CaseStatus.REPORTED)
-    rt.tracer.event("report_written")
+    rt.tracer.event("report_written", skipped=not rt.write_report)
     return {
         "report": narrative,
         "status": CaseStatus.REPORTED.value,
@@ -175,17 +193,50 @@ def _after_critic(state: GraphState) -> Literal["generate_report", "revise", "ma
     return "mark_unresolved"
 
 
-def build_graph(rt: _Runtime):
+def _finalize_baseline(state: GraphState, rt: _Runtime) -> dict:
+    """Investigator-only exit: mechanical precheck only, no Critic LLM."""
+    _transition(rt, "finalize_baseline")
+    hypothesis = state["hypothesis"]
+    assert hypothesis is not None
+    valid_ids = rt.store.evidence_ids(rt.case_id)
+    precheck = precheck_citations(hypothesis, valid_ids)
+    rt.tracer.event(
+        "precheck",
+        revision=0,
+        passed=precheck.passed,
+        fabricated=precheck.fabricated_evidence_ids,
+        mode="investigator_only",
+    )
+    note = (
+        "# Investigator-only baseline\n\n"
+        "Critic skipped. Hypothesis below is the first Investigator output.\n"
+    )
+    rt.store.update_status(rt.case_id, CaseStatus.APPROVED)
+    return {
+        "precheck": precheck,
+        "approved": precheck.passed,
+        "report": note,
+        "status": CaseStatus.APPROVED.value,
+    }
+
+
+def build_graph(rt: _Runtime, mode: str = "full"):
     g = StateGraph(GraphState)
     g.add_node("parse_case", lambda s: _parse_case(s, rt))
     g.add_node("investigate", lambda s: _investigate(s, rt))
+    g.add_edge(START, "parse_case")
+    g.add_edge("parse_case", "investigate")
+
+    if mode == "investigator_only":
+        g.add_node("finalize_baseline", lambda s: _finalize_baseline(s, rt))
+        g.add_edge("investigate", "finalize_baseline")
+        g.add_edge("finalize_baseline", END)
+        return g.compile()
+
     g.add_node("critic_review", lambda s: _critic_review(s, rt))
     g.add_node("revise", lambda s: _revise(s, rt))
     g.add_node("generate_report", lambda s: _generate_report(s, rt))
     g.add_node("mark_unresolved", lambda s: _mark_unresolved(s, rt))
-
-    g.add_edge(START, "parse_case")
-    g.add_edge("parse_case", "investigate")
     g.add_edge("investigate", "critic_review")
     g.add_conditional_edges(
         "critic_review",
@@ -202,12 +253,42 @@ def build_graph(rt: _Runtime):
     return g.compile()
 
 
-def run_case(path: str, case_id: str) -> Path:
-    """Entry point used by the CLI — same signature as the old pipeline loop."""
-    rt = _Runtime(case_id, path)
-    rt.tracer.event("run_start", case_id=case_id, source=path, orchestrator="langgraph", **rt.client.settings())
+def run_case(
+    path: str,
+    case_id: str,
+    *,
+    mode: str = "full",
+    write_report: bool = True,
+    run_label: str | None = None,
+) -> Path:
+    """Run a case through LangGraph.
 
-    app = build_graph(rt)
+    mode: "full" (Investigator+Critic) or "investigator_only" (baseline).
+    write_report: if False, skip the Report LLM (eval scoring only needs hypothesis).
+    run_label: optional tracer folder suffix, e.g. eval/full/Q2_1/r1
+    """
+    if mode not in ("full", "investigator_only"):
+        raise RuntimeError(f"Unknown mode '{mode}'")
+
+    trace_id = run_label or case_id
+    rt = _Runtime(
+        case_id,
+        path,
+        write_report=write_report,
+        mode=mode,
+        trace_id=trace_id,
+    )
+    rt.tracer.event(
+        "run_start",
+        case_id=case_id,
+        source=path,
+        mode=mode,
+        write_report=write_report,
+        orchestrator="langgraph",
+        **rt.client.settings(),
+    )
+
+    app = build_graph(rt, mode=mode)
     final: GraphState = app.invoke(
         {
             "case_id": case_id,
@@ -221,10 +302,12 @@ def run_case(path: str, case_id: str) -> Path:
     hypothesis = final.get("hypothesis")
     critiques = final.get("critiques") or []
     status = final.get("status", CaseStatus.UNRESOLVED.value)
+    precheck = final.get("precheck")
     rt.tracer.event(
         "resolution",
         status=status,
         revisions=final.get("revision_count", 0),
+        mode=mode,
         orchestrator="langgraph",
     )
 
@@ -232,9 +315,11 @@ def run_case(path: str, case_id: str) -> Path:
         "case_id": case_id,
         "source_files": [path],
         "status": status,
+        "mode": mode,
         "model_settings": rt.client.settings(),
         "orchestrator": "langgraph",
         "revisions": final.get("revision_count", 0),
+        "precheck": precheck.model_dump() if precheck else None,
         "hypothesis": hypothesis.model_dump() if hypothesis else None,
         "critiques": [c.model_dump() for c in critiques],
     }

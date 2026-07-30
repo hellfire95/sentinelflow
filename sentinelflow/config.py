@@ -32,6 +32,8 @@ TEMPERATURE = float(os.environ.get("SENTINELFLOW_TEMPERATURE", "0.0"))
 MAX_REVISIONS = 2  # Critic rejections beyond this -> unresolved, human review
 STRUCTURED_OUTPUT_RETRIES = 1  # one retry with validation-error feedback
 
+EVAL_RUNS = 3  # Stage 5: repeats per case/configuration
+
 DB_PATH = os.environ.get("SENTINELFLOW_DB", "sentinelflow.db")
 RUNS_DIR = os.environ.get("SENTINELFLOW_RUNS_DIR", "runs")
 

@@ -1,0 +1,12 @@
+{
+  "case_id": "suspicious_vendor_mismatch",
+  "source_file": "suspicious_vendor_mismatch.eml",
+  "classification": "suspicious_inconclusive",
+  "key_indicators": [
+    "From domain partner-vendor.example does not align with Reply-To/Return-Path mail.other-vendor.example",
+    "DMARC fail for header.from despite SPF/DKIM pass on the envelope domain",
+    "No malicious links or attachments in the body — content is a vague ticket question only"
+  ],
+  "attack_techniques": [],
+  "notes": "Auth/header mismatch is suspicious, but there is no clear phishing payload. Correct call is suspicious_inconclusive, not forced phishing."
+}

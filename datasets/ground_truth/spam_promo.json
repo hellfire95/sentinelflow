@@ -1,0 +1,12 @@
+{
+  "case_id": "spam_promo",
+  "source_file": "spam_promo.eml",
+  "classification": "spam",
+  "key_indicators": [
+    "Bulk marketing flash-sale language and promotional domain promo-offers.biz",
+    "Links stay on the same promotional domain (shop.promo-offers.biz)",
+    "Authentication passes for the promotional domain — unsolicited but not brand-impersonation phishing"
+  ],
+  "attack_techniques": [],
+  "notes": "Spam/unsolicited marketing, not credential phishing. Correct label is spam, not phishing."
+}

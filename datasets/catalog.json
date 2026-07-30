@@ -4,55 +4,16 @@
   "target_case_count": {"min": 10, "max": 15},
   "min_benign": 2,
   "cases": [
-    {
-      "case_id": "Q2_1",
-      "evidence_type": "email",
-      "input": "agent_inputs/Q2_1.eml",
-      "ground_truth": "ground_truth/Q2_1.json",
-      "ready": true
-    },
-    {
-      "case_id": "Q2_2",
-      "evidence_type": "email",
-      "input": "agent_inputs/Q2_2.eml",
-      "ground_truth": "ground_truth/Q2_2.json",
-      "ready": true
-    },
-    {
-      "case_id": "Q3",
-      "evidence_type": "network",
-      "input": "agent_inputs/Q3.pcap",
-      "ground_truth": "ground_truth/Q3.json",
-      "ready": true,
-      "note": "pcap is gitignored; keep local copy"
-    },
-    {
-      "case_id": "sample_eve",
-      "evidence_type": "ids",
-      "input": "agent_inputs/sample_eve.json",
-      "ground_truth": "ground_truth/sample_eve.json",
-      "ready": true,
-      "note": "synthetic Suricata sample for parser coverage"
-    },
-    {
-      "case_id": "benign_newsletter",
-      "evidence_type": "email",
-      "input": "agent_inputs/benign_newsletter.eml",
-      "ground_truth": "ground_truth/benign_newsletter.json",
-      "ready": true,
-      "note": "suspicious-looking but benign (tracking links, aligned auth)"
-    },
-    {
-      "case_id": "benign_legit_mail",
-      "evidence_type": "email",
-      "input": "agent_inputs/benign_legit_mail.eml",
-      "ground_truth": "ground_truth/benign_legit_mail.json",
-      "ready": true
-    }
+    {"case_id": "Q2_1", "evidence_type": "email", "input": "agent_inputs/Q2_1.eml", "ground_truth": "ground_truth/Q2_1.json", "ready": true},
+    {"case_id": "Q2_2", "evidence_type": "email", "input": "agent_inputs/Q2_2.eml", "ground_truth": "ground_truth/Q2_2.json", "ready": true},
+    {"case_id": "Q3", "evidence_type": "network", "input": "agent_inputs/Q3.pcap", "ground_truth": "ground_truth/Q3.json", "ready": true, "note": "pcap is gitignored; keep local copy"},
+    {"case_id": "sample_eve", "evidence_type": "ids", "input": "agent_inputs/sample_eve.json", "ground_truth": "ground_truth/sample_eve.json", "ready": true, "note": "synthetic Suricata sample"},
+    {"case_id": "benign_newsletter", "evidence_type": "email", "input": "agent_inputs/benign_newsletter.eml", "ground_truth": "ground_truth/benign_newsletter.json", "ready": true},
+    {"case_id": "benign_legit_mail", "evidence_type": "email", "input": "agent_inputs/benign_legit_mail.eml", "ground_truth": "ground_truth/benign_legit_mail.json", "ready": true},
+    {"case_id": "spam_promo", "evidence_type": "email", "input": "agent_inputs/spam_promo.eml", "ground_truth": "ground_truth/spam_promo.json", "ready": true},
+    {"case_id": "phishing_bank_lure", "evidence_type": "email", "input": "agent_inputs/phishing_bank_lure.eml", "ground_truth": "ground_truth/phishing_bank_lure.json", "ready": true},
+    {"case_id": "suspicious_vendor_mismatch", "evidence_type": "email", "input": "agent_inputs/suspicious_vendor_mismatch.eml", "ground_truth": "ground_truth/suspicious_vendor_mismatch.json", "ready": true}
   ],
-  "planned": [
-    "mta_public_1",
-    "mta_public_2",
-    "mta_public_3"
-  ]
+  "planned": ["mta_public_1", "mta_public_2", "mta_public_3"],
+  "ready_count": 9
 }

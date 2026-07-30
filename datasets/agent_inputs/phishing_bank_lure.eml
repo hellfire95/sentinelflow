@@ -1,0 +1,32 @@
+From: Secure Bank Alerts <alerts@secure-bank-login.com>
+To: customer@example.com
+Subject: Urgent: verify your account within 24 hours
+Date: Thu, 30 Jul 2026 18:46:59 +1000
+Message-ID: <178540121942.74957.16396638587139040521@mail.evil-host.net>
+Reply-To: help@mail.evil-host.net
+Return-Path: bounce@mail.evil-host.net
+Authentication-Results: spf=pass smtp.mailfrom=mail.evil-host.net; dkim=none
+ header.d=none; dmarc=fail header.from=secure-bank-login.com
+Received-SPF: Pass (domain of mail.evil-host.net designates 198.51.100.77 as
+ permitted sender)
+Received: from mail.evil-host.net (198.51.100.77) by mx.example.com; Thu, 30
+ Jul 2026 18:46:59 +1000
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============6182060994621628770=="
+
+--===============6182060994621628770==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Verify: http://secure-bank-login.com/login
+
+--===============6182060994621628770==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><p>Your account will be locked.</p><a href=3D"http://secure-bank-=
+login.com/login">Verify now</a></body></html>
+
+--===============6182060994621628770==--

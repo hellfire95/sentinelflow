@@ -1,0 +1,15 @@
+{
+  "case_id": "phishing_bank_lure",
+  "source_file": "phishing_bank_lure.eml",
+  "classification": "phishing",
+  "key_indicators": [
+    "Urgent account-verification lure with 24-hour threat language",
+    "From display domain secure-bank-login.com mismatches Reply-To/Return-Path mail.evil-host.net",
+    "DMARC fail for header.from; SPF only passes for the unrelated envelope domain",
+    "Body link to secure-bank-login.com login path (credential harvesting pattern)"
+  ],
+  "attack_techniques": [
+    "T1566.002 Phishing: Spearphishing Link"
+  ],
+  "notes": "Classic credential-phishing lure with domain mismatch and failed DMARC alignment."
+}

@@ -1,0 +1,19 @@
+From: IT Helpdesk <it-help@partner-vendor.example>
+To: employee@example.com
+Subject: Quick question about your ticket
+Date: Thu, 30 Jul 2026 18:46:59 +1000
+Message-ID:
+ <178540121942.74957.14919169081507395591@mail.other-vendor.example>
+Reply-To: support@mail.other-vendor.example
+Return-Path: support@mail.other-vendor.example
+Authentication-Results: spf=pass smtp.mailfrom=mail.other-vendor.example;
+ dkim=pass header.d=mail.other-vendor.example; dmarc=fail
+ header.from=partner-vendor.example
+Received: from mail.other-vendor.example (203.0.113.90) by mx.example.com;
+ Thu, 30 Jul 2026 18:46:59 +1000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+
+Hi, can you confirm if ticket 4412 is still open?
+No links in this message — just checking.

@@ -1,0 +1,30 @@
+From: Deals Hub <blast@promo-offers.biz>
+To: you@example.com
+Subject: FLASH SALE =?utf-8?b?4oCU?= 90% OFF everything!!!!!
+Date: Thu, 30 Jul 2026 18:46:59 +1000
+Message-ID: <178540121941.74957.16124833679661533766@promo-offers.biz>
+Reply-To: noreply@promo-offers.biz
+Return-Path: bounce@promo-offers.biz
+Authentication-Results: spf=pass smtp.mailfrom=promo-offers.biz; dkim=pass
+ header.d=promo-offers.biz; dmarc=pass header.from=promo-offers.biz
+Received: from mta.promo-offers.biz (203.0.113.55) by mx.example.com; Thu, 30
+ Jul 2026 18:46:59 +1000
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============3537338156461828839=="
+
+--===============3537338156461828839==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Buy now: https://shop.promo-offers.biz/sale?utm=blast
+
+--===============3537338156461828839==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><h1>FLASH SALE</h1><a href=3D"https://shop.promo-offers.biz/sale?=
+utm=3Dblast">Shop now</a></body></html>
+
+--===============3537338156461828839==--

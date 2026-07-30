@@ -13,6 +13,18 @@ Download locally into `datasets/agent_inputs/` when expanding the eval set.
 
 Always credit the source in the ground-truth `notes` field.
 
+### SharkFest 2019 US labs (added)
+
+Source: https://malware-traffic-analysis.net/2019/sharkfest/
+
+| local name | original zip | password (on that page) |
+|---|---|---|
+| `mta_public_1.pcap` | `sf19us-MTA-lab-01.pcap.zip` | `2019_workshop` |
+| `mta_public_2.pcap` | `sf19us-MTA-lab-02.pcap.zip` | `2019_workshop` |
+| `mta_public_3.pcap` | `sf19us-MTA-lab-03.pcap.zip` | `2019_workshop` |
+
+Other MTA posts use the site-wide password scheme on the [about page](https://www.malware-traffic-analysis.net/about.html) (`infected_YYYYMMDD`).
+
 ## Local coursework captures
 
 Keep GET-flood / Qakbot / other personal lab pcaps outside git if large; point `catalog.json` at the local path and keep ground truth in-repo.

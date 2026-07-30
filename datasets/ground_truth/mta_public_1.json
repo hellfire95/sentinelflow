@@ -1,0 +1,15 @@
+{
+  "case_id": "mta_public_1",
+  "source_file": "mta_public_1.pcap",
+  "classification": "malware_delivery",
+  "key_indicators": [
+    "High volume of unusual/DGA-like DNS names including cocoaten.org subdomains (e.g. gdskyzqhy.cocoaten.org)",
+    "Windows host 192.168.1.103 generating mixed browsing plus suspicious DNS during a short capture window",
+    "Source: Malware-Traffic-Analysis.net SharkFest 2019 US lab 01 (sf19us-MTA-lab-01.pcap)"
+  ],
+  "attack_techniques": [
+    "T1071.001 Application Layer Protocol: Web Protocols",
+    "T1568.002 Dynamic Resolution: Domain Generation Algorithms"
+  ],
+  "notes": "Public training pcap from https://malware-traffic-analysis.net/2019/sharkfest/ (sf19us-MTA-lab-01). Credit: malware-traffic-analysis.net / Brad Duncan. Pcap is gitignored; keep local copy."
+}

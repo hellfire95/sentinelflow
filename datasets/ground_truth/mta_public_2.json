@@ -1,0 +1,16 @@
+{
+  "case_id": "mta_public_2",
+  "source_file": "mta_public_2.pcap",
+  "classification": "malware_delivery",
+  "key_indicators": [
+    "DNS query for onyeocha2.cf then repeated HTTP POST to onyeocha2.cf/sinos/fre.php",
+    "User-Agent Mozilla/4.08 (Charon; Inferno) — known malware HTTP client fingerprint",
+    "Infected host appears as 10.0.40.217 in an AD-like environment (pizzajukebox.com LDAP DNS)",
+    "Source: Malware-Traffic-Analysis.net SharkFest 2019 US lab 02 (sf19us-MTA-lab-02.pcap)"
+  ],
+  "attack_techniques": [
+    "T1071.001 Application Layer Protocol: Web Protocols",
+    "T1105 Ingress Tool Transfer"
+  ],
+  "notes": "Public training pcap from https://malware-traffic-analysis.net/2019/sharkfest/ (sf19us-MTA-lab-02). Credit: malware-traffic-analysis.net / Brad Duncan. Pcap is gitignored; keep local copy."
+}

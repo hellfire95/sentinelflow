@@ -12,8 +12,11 @@
     {"case_id": "benign_legit_mail", "evidence_type": "email", "input": "agent_inputs/benign_legit_mail.eml", "ground_truth": "ground_truth/benign_legit_mail.json", "ready": true},
     {"case_id": "spam_promo", "evidence_type": "email", "input": "agent_inputs/spam_promo.eml", "ground_truth": "ground_truth/spam_promo.json", "ready": true},
     {"case_id": "phishing_bank_lure", "evidence_type": "email", "input": "agent_inputs/phishing_bank_lure.eml", "ground_truth": "ground_truth/phishing_bank_lure.json", "ready": true},
-    {"case_id": "suspicious_vendor_mismatch", "evidence_type": "email", "input": "agent_inputs/suspicious_vendor_mismatch.eml", "ground_truth": "ground_truth/suspicious_vendor_mismatch.json", "ready": true}
+    {"case_id": "suspicious_vendor_mismatch", "evidence_type": "email", "input": "agent_inputs/suspicious_vendor_mismatch.eml", "ground_truth": "ground_truth/suspicious_vendor_mismatch.json", "ready": true},
+    {"case_id": "mta_public_1", "evidence_type": "network", "input": "agent_inputs/mta_public_1.pcap", "ground_truth": "ground_truth/mta_public_1.json", "ready": true, "note": "sf19us-MTA-lab-01; pcap gitignored"},
+    {"case_id": "mta_public_2", "evidence_type": "network", "input": "agent_inputs/mta_public_2.pcap", "ground_truth": "ground_truth/mta_public_2.json", "ready": true, "note": "sf19us-MTA-lab-02; pcap gitignored"},
+    {"case_id": "mta_public_3", "evidence_type": "network", "input": "agent_inputs/mta_public_3.pcap", "ground_truth": "ground_truth/mta_public_3.json", "ready": true, "note": "sf19us-MTA-lab-03; pcap gitignored"}
   ],
-  "planned": ["mta_public_1", "mta_public_2", "mta_public_3"],
-  "ready_count": 9
+  "planned": [],
+  "ready_count": 12
 }

@@ -16,9 +16,11 @@ Answer keys live in `ground_truth/` and **must never** be passed to agents.
 | spam_promo | email | `spam_promo.eml` | `spam_promo.json` | ready |
 | phishing_bank_lure | email | `phishing_bank_lure.eml` | `phishing_bank_lure.json` | ready |
 | suspicious_vendor_mismatch | email | `suspicious_vendor_mismatch.eml` | `suspicious_vendor_mismatch.json` | ready |
-| mta_public_* | network | see `SOURCES.md` | TBD | planned |
+| mta_public_1 | network | `mta_public_1.pcap` (local) | `mta_public_1.json` | ready |
+| mta_public_2 | network | `mta_public_2.pcap` (local) | `mta_public_2.json` | ready |
+| mta_public_3 | network | `mta_public_3.pcap` (local) | `mta_public_3.json` | ready |
 
-Ready now: **9** cases (includes **2 benign**). Target: 10–15.
+Ready now: **12** cases (includes **2 benign**). Target: 10–15 — met.
 
 ## Ground-truth schema
 

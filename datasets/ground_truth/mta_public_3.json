@@ -1,0 +1,16 @@
+{
+  "case_id": "mta_public_3",
+  "source_file": "mta_public_3.pcap",
+  "classification": "malware_delivery",
+  "key_indicators": [
+    "DNS for bit.ly, supportservice.site, and azaman222.xyz from host 10.4.22.101",
+    "HTTP GET to supportservice.site/sug.pos and HTTP POST to azaman222.xyz/index.php",
+    "Legacy IE User-Agents atypical for modern browsing; large follow-on transfer volume to external IPs",
+    "Source: Malware-Traffic-Analysis.net SharkFest 2019 US lab 03 (sf19us-MTA-lab-03.pcap)"
+  ],
+  "attack_techniques": [
+    "T1071.001 Application Layer Protocol: Web Protocols",
+    "T1566.002 Phishing: Spearphishing Link"
+  ],
+  "notes": "Public training pcap from https://malware-traffic-analysis.net/2019/sharkfest/ (sf19us-MTA-lab-03). Credit: malware-traffic-analysis.net / Brad Duncan. Pcap is gitignored; keep local copy."
+}

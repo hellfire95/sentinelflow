@@ -26,6 +26,7 @@ from .models import (
     Hypothesis,
     PrecheckResult,
 )
+from .approval import seed_actions_from_hypothesis, write_actions_artifact
 from .pipeline import _collect_cited_ids, ingest
 from .precheck import precheck_citations
 from .store import EvidenceStore
@@ -311,6 +312,22 @@ def run_case(
         orchestrator="langgraph",
     )
 
+    # Stage 6: seed simulated approval records for recommended actions.
+    # Never executed — human must approve/reject via CLI.
+    actions = []
+    if hypothesis and status in (
+        CaseStatus.REPORTED.value,
+        CaseStatus.APPROVED.value,
+    ):
+        actions = seed_actions_from_hypothesis(rt.store, case_id, hypothesis)
+        if actions:
+            status = CaseStatus.AWAITING_APPROVAL.value
+            rt.tracer.event(
+                "actions_seeded",
+                count=len(actions),
+                action_ids=[a.action_id for a in actions],
+            )
+
     result = {
         "case_id": case_id,
         "source_files": [path],
@@ -322,9 +339,12 @@ def run_case(
         "precheck": precheck.model_dump() if precheck else None,
         "hypothesis": hypothesis.model_dump() if hypothesis else None,
         "critiques": [c.model_dump() for c in critiques],
+        "pending_actions": [a.model_dump(mode="json") for a in actions],
     }
     rt.tracer.write_artifact("result.json", json.dumps(result, indent=2, default=str))
     rt.tracer.write_artifact("report.md", final.get("report") or "")
+    if actions:
+        write_actions_artifact(rt.tracer.run_dir, actions)
     rt.tracer.event("run_end")
     run_dir = rt.tracer.run_dir
     rt.tracer.close()

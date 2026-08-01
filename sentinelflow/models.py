@@ -33,6 +33,8 @@ class CaseStatus(str, Enum):
     APPROVED = "approved"
     UNRESOLVED = "unresolved_human_review_required"
     REPORTED = "reported"
+    AWAITING_APPROVAL = "awaiting_human_approval"
+    ACTIONS_REVIEWED = "actions_reviewed"
 
 
 class Case(BaseModel):
@@ -110,3 +112,26 @@ class PrecheckResult(BaseModel):
     @property
     def passed(self) -> bool:
         return not self.fabricated_evidence_ids
+
+
+class ActionStatus(str, Enum):
+    PENDING = "pending"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+
+
+class ProposedAction(BaseModel):
+    """A recommended action that requires explicit human approval.
+
+    Simulated only — never executed against a real system.
+    """
+
+    action_id: str
+    case_id: str
+    description: str
+    status: ActionStatus = ActionStatus.PENDING
+    decided_by: str | None = None
+    decided_at: datetime | None = None
+    note: str | None = None
+    # Always False in this project: we record the decision, we do not act.
+    executed: bool = False

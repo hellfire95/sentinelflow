@@ -66,6 +66,11 @@ cp .env.example .env   # then add GEMINI_API_KEY (or another provider key)
 
 # Stage 5 evaluation: 3 runs × investigator_only vs full, all ready cases
 .venv/bin/python scripts/run_evaluation.py
+
+# Stage 6: human approval for recommended actions (simulated — never executed)
+.venv/bin/python -m sentinelflow.cli actions list --pending
+.venv/bin/python -m sentinelflow.cli actions decide CASE-ACT001 --approve --by arun
+.venv/bin/python -m sentinelflow.cli actions decide CASE-ACT002 --reject --note "too broad"
 ```
 Run artifacts land in `runs/<case_id>/<timestamp>/`: `trace.jsonl` (every
 agent call and verdict), `result.json` (structured outcome), `report.md`

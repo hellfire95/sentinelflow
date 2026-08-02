@@ -36,6 +36,11 @@ Orchestration is a LangGraph state machine (`sentinelflow/graph.py`): same
 steps as above, with explicit nodes, a capped revision loop, and
 `graph_transition` events in the run trace. Parsers and agents are unchanged.
 
+Stage 7 adds optional threat-intel enrichment after parse (`enrich_threat_intel`
+node): IP/domain/hash lookups via a cached client (VirusTotal if
+`VIRUSTOTAL_API_KEY` is set; otherwise offline "unavailable"). The same tools
+are exposed as an MCP server: `mcp_servers/threat_intel_server.py`.
+
 Supported inputs: `.eml` (email), `.pcap`/`.pcapng` (via tshark), Suricata
 `eve.json`. Adding a new input type only requires a new parser — the agents
 are evidence-type-agnostic.
@@ -71,6 +76,11 @@ cp .env.example .env   # then add GEMINI_API_KEY (or another provider key)
 .venv/bin/python -m sentinelflow.cli actions list --pending
 .venv/bin/python -m sentinelflow.cli actions decide CASE-ACT001 --approve --by arun
 .venv/bin/python -m sentinelflow.cli actions decide CASE-ACT002 --reject --note "too broad"
+
+# Stage 7: threat-intel lookups (cached; optional VIRUSTOTAL_API_KEY)
+.venv/bin/python -m sentinelflow.cli lookup --domain firiri.shop
+.venv/bin/python -m sentinelflow.cli lookup --ip 80.96.157.110
+.venv/bin/python mcp_servers/threat_intel_server.py   # MCP server process
 ```
 Run artifacts land in `runs/<case_id>/<timestamp>/`: `trace.jsonl` (every
 agent call and verdict), `result.json` (structured outcome), `report.md`

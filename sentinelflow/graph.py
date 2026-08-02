@@ -18,6 +18,7 @@ from .agents import critic as critic_agent
 from .agents import investigator as investigator_agent
 from .agents import report as report_agent
 from .agents.llm import LLMClient
+from .approval import seed_actions_from_hypothesis, write_actions_artifact
 from .models import (
     CaseStatus,
     Critique,
@@ -26,10 +27,10 @@ from .models import (
     Hypothesis,
     PrecheckResult,
 )
-from .approval import seed_actions_from_hypothesis, write_actions_artifact
 from .pipeline import _collect_cited_ids, ingest
 from .precheck import precheck_citations
 from .store import EvidenceStore
+from .threat_intel.enrich import enrich_evidence
 from .trace import Tracer
 
 
@@ -60,11 +61,17 @@ class _Runtime:
         write_report: bool = True,
         mode: str = "full",
         trace_id: str | None = None,
+        enrich_threat_intel: bool | None = None,
     ):
         self.case_id = case_id  # logical id used in Evidence IDs
         self.source_path = source_path
         self.write_report = write_report
         self.mode = mode
+        self.enrich_threat_intel = (
+            config.THREAT_INTEL_ENABLED
+            if enrich_threat_intel is None
+            else enrich_threat_intel
+        )
         self.store = EvidenceStore()
         self.tracer = Tracer(config.RUNS_DIR, trace_id or case_id)
         self.client = LLMClient()
@@ -93,6 +100,24 @@ def _parse_case(state: GraphState, rt: _Runtime) -> dict:
         "precheck": None,
         "report": None,
     }
+
+
+def _enrich_threat_intel(state: GraphState, rt: _Runtime) -> dict:
+    """Optional Stage 7: append IP/domain/hash reputation evidence (cached)."""
+    _transition(rt, "enrich_threat_intel", enabled=rt.enrich_threat_intel)
+    if not rt.enrich_threat_intel:
+        return {}
+    added = enrich_evidence(rt.case_id, state["evidence"])
+    if not added:
+        rt.tracer.event("threat_intel_enriched", added=0)
+        return {}
+    rt.store.save_evidence(added)
+    rt.tracer.event(
+        "threat_intel_enriched",
+        added=len(added),
+        labels=[e.label for e in added],
+    )
+    return {"evidence": list(state["evidence"]) + added}
 
 
 def _investigate(state: GraphState, rt: _Runtime) -> dict:
@@ -224,9 +249,11 @@ def _finalize_baseline(state: GraphState, rt: _Runtime) -> dict:
 def build_graph(rt: _Runtime, mode: str = "full"):
     g = StateGraph(GraphState)
     g.add_node("parse_case", lambda s: _parse_case(s, rt))
+    g.add_node("enrich_threat_intel", lambda s: _enrich_threat_intel(s, rt))
     g.add_node("investigate", lambda s: _investigate(s, rt))
     g.add_edge(START, "parse_case")
-    g.add_edge("parse_case", "investigate")
+    g.add_edge("parse_case", "enrich_threat_intel")
+    g.add_edge("enrich_threat_intel", "investigate")
 
     if mode == "investigator_only":
         g.add_node("finalize_baseline", lambda s: _finalize_baseline(s, rt))
@@ -261,12 +288,14 @@ def run_case(
     mode: str = "full",
     write_report: bool = True,
     run_label: str | None = None,
+    enrich_threat_intel: bool | None = None,
 ) -> Path:
     """Run a case through LangGraph.
 
     mode: "full" (Investigator+Critic) or "investigator_only" (baseline).
     write_report: if False, skip the Report LLM (eval scoring only needs hypothesis).
     run_label: optional tracer folder suffix, e.g. eval/full/Q2_1/r1
+    enrich_threat_intel: Stage 7 IOC reputation enrichment (default from config).
     """
     if mode not in ("full", "investigator_only"):
         raise RuntimeError(f"Unknown mode '{mode}'")
@@ -278,6 +307,7 @@ def run_case(
         write_report=write_report,
         mode=mode,
         trace_id=trace_id,
+        enrich_threat_intel=enrich_threat_intel,
     )
     rt.tracer.event(
         "run_start",
@@ -285,6 +315,7 @@ def run_case(
         source=path,
         mode=mode,
         write_report=write_report,
+        enrich_threat_intel=rt.enrich_threat_intel,
         orchestrator="langgraph",
         **rt.client.settings(),
     )

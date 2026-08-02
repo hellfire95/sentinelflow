@@ -38,11 +38,17 @@ def cmd_parse(args: argparse.Namespace) -> None:
 def cmd_run(args: argparse.Namespace) -> None:
     case_id = args.case_id or _default_case_id(args.file)
     mode = "investigator_only" if args.investigator_only else "full"
+    enrich = None
+    if args.threat_intel:
+        enrich = True
+    if args.no_threat_intel:
+        enrich = False
     run_dir = run_case(
         args.file,
         case_id,
         mode=mode,
         write_report=not args.no_report,
+        enrich_threat_intel=enrich,
     )
     print(f"Run complete. Artifacts in: {run_dir}")
     print(f"  - {run_dir / 'trace.jsonl'}")
@@ -74,6 +80,25 @@ def cmd_actions_list(args: argparse.Namespace) -> None:
             print(f"    decided_by: {a.decided_by} at {a.decided_at}")
         if a.note:
             print(f"    note: {a.note}")
+
+
+def cmd_lookup(args: argparse.Namespace) -> None:
+    import json
+
+    from .threat_intel import (
+        lookup_domain_reputation,
+        lookup_file_hash,
+        lookup_ip_reputation,
+    )
+
+    if args.ip:
+        print(json.dumps(lookup_ip_reputation(args.ip), indent=2))
+    elif args.domain:
+        print(json.dumps(lookup_domain_reputation(args.domain), indent=2))
+    elif args.hash:
+        print(json.dumps(lookup_file_hash(args.hash), indent=2))
+    else:
+        raise RuntimeError("Specify --ip, --domain, or --hash")
 
 
 def cmd_actions_decide(args: argparse.Namespace) -> None:
@@ -116,7 +141,26 @@ def main() -> None:
         action="store_true",
         help="skip Report LLM (useful for evaluation)",
     )
+    p_run.add_argument(
+        "--threat-intel",
+        action="store_true",
+        help="force Stage 7 threat-intel enrichment on",
+    )
+    p_run.add_argument(
+        "--no-threat-intel",
+        action="store_true",
+        help="disable Stage 7 threat-intel enrichment",
+    )
     p_run.set_defaults(func=cmd_run)
+
+    p_lookup = sub.add_parser(
+        "lookup",
+        help="threat-intel lookup (cached; VirusTotal if VIRUSTOTAL_API_KEY set)",
+    )
+    p_lookup.add_argument("--ip")
+    p_lookup.add_argument("--domain")
+    p_lookup.add_argument("--hash", dest="hash")
+    p_lookup.set_defaults(func=cmd_lookup)
 
     p_actions = sub.add_parser(
         "actions",

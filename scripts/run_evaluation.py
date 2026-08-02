@@ -47,6 +47,8 @@ def run_one(case: dict, mode: str, run_idx: int, write_report: bool) -> dict:
         mode=mode,
         write_report=write_report,
         run_label=label,
+        # Keep Stage 5 numbers comparable; enrichment is Stage 7.
+        enrich_threat_intel=False,
     )
     result = json.loads((run_dir / "result.json").read_text())
     gt = json.loads((ROOT / "datasets" / case["ground_truth"]).read_text())

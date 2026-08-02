@@ -37,6 +37,15 @@ EVAL_RUNS = 3  # Stage 5: repeats per case/configuration
 DB_PATH = os.environ.get("SENTINELFLOW_DB", "sentinelflow.db")
 RUNS_DIR = os.environ.get("SENTINELFLOW_RUNS_DIR", "runs")
 
+# Stage 7: enrich evidence with IP/domain/hash reputation lookups.
+# Works offline without VIRUSTOTAL_API_KEY (returns "unavailable"); with a key,
+# uses VirusTotal under a 4 req/min cache-backed limiter.
+THREAT_INTEL_ENABLED = os.environ.get("SENTINELFLOW_THREAT_INTEL", "1") not in (
+    "0",
+    "false",
+    "False",
+)
+
 
 def detect_provider() -> str | None:
     if os.environ.get("OPENAI_API_KEY"):

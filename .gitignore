@@ -3,6 +3,7 @@
 __pycache__/
 *.pyc
 *.db
+threat_intel_cache.db
 runs/
 
 # personal / heavy files that must not enter the repo

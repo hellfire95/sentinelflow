@@ -14,6 +14,7 @@ class EvidenceCategory(str, Enum):
     ATTACHMENT = "attachment"
     BODY = "body"
     NETWORK = "network"  # used from Stage 2 onward
+    THREAT_INTEL = "threat_intel"  # Stage 7 enrichment lookups
 
 
 class Evidence(BaseModel):

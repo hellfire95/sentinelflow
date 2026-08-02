@@ -10,7 +10,7 @@ agent challenges claims that do not hold up.
 The LLM only ever sees clean, structured, already-extracted evidence.
 
 <p align="center">
-  <img src="docs/images/ui-inquiry.jpg" alt="SentinelFlow manuscript UI — upload a case, run the inquiry, approve recommended actions" width="920"/>
+  <img src="docs/images/ui-home.jpg" alt="SentinelFlow manuscript UI — The Field of Evidence home screen" width="920"/>
 </p>
 
 <p align="center"><em>Stage 8 UI — upload or pick a sample, watch the inquiry path, seal recommended actions (simulated only).</em></p>
